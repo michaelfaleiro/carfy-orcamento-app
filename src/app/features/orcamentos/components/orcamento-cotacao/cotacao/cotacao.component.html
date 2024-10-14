@@ -1,0 +1,43 @@
+<div class="container h-100 d-flex flex-column">
+  <div>
+    @if(isCotacaoVendaDetalhes){
+    <app-cotacao-venda-detalhes
+      [cotacaoId]="cotacaoId"
+      (close)="showCotacaoVendaDetalhes()"
+    ></app-cotacao-venda-detalhes>
+    } @else {
+    <div>
+      <table class="table table-sm table-striped table-hover">
+        <thead>
+          <tr>
+            <th scope="col-3">Aberta em</th>
+            <th scope="col-3">Última Atualização</th>
+            <th scope="col">Status</th>
+            <th scope="col-2">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cotacao of cotacoes">
+            <td>
+              {{ cotacao.createdAt | date : "dd/MM/yyyy HH:mm" : "-3000" }}
+            </td>
+            <td>
+              {{ cotacao.updatedAt | date : "dd/MM/yyyy HH:mm " : "-3000" }}
+            </td>
+            <td>{{ cotacao.status }}</td>
+            <td>
+              <button
+                class="btn btn-sm btn-primary"
+                (click)="detalhesCotacao(cotacao)"
+              >
+                <i class="fas fa-edit"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    }
+  </div>
+</div>

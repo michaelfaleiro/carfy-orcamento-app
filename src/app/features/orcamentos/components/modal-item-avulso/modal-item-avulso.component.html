@@ -1,0 +1,98 @@
+<div class="modal" style="display: block">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Item Avulso</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form
+          [formGroup]="itemForm"
+          (ngSubmit)="submit()"
+          (keydown.enter)="$event.preventDefault()"
+        >
+          <div class="d-flex gap-2 mb-3">
+            <div class="col-2">
+              <label for="quantidade" class="form-label">Quant</label>
+              <input
+                type="number"
+                class="form-control"
+                id="quantidade"
+                name="quantidade"
+                formControlName="quantidade"
+                #quantidadeInput
+              />
+            </div>
+
+            <div class="col">
+              <label for="sku" class="form-label">SKU</label>
+              <input
+                type="text"
+                class="form-control"
+                id="sku"
+                name="sku"
+                formControlName="sku"
+              />
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="descricao" class="form-label">Descrição</label>
+            <input
+              type="text"
+              class="form-control"
+              id="descricao"
+              name="descricao"
+              formControlName="descricao"
+            />
+          </div>
+          <div class="d-flex gap-2">
+            <div class="col">
+              <label class="form-label" for="fabricante">Fabricante</label>
+              <select
+                class="form-select"
+                id="fabricante"
+                name="fabricante"
+                formControlName="fabricante"
+              >
+                <option value="d3b07384-d9a7-4f3b-8a1e-5b5a5f5f5f5f">
+                  Monroe
+                </option>
+                <option value="e4b07384-e9a7-4f3b-9a1e-6b6a6f6f6f6f">
+                  Cofap
+                </option>
+                <option value="f5b07384-f9a7-4f3b-0a1e-7b7a7f7f7f7f">
+                  Bosch
+                </option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="valorVenda" class="form-label">Valor</label>
+              <input
+                type="text"
+                class="form-control"
+                id="valorVenda"
+                name="valorVenda"
+                formControlName="valorVenda"
+                autocomplete="off"
+                currencyMask
+                [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
+              />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="closeModal()"
+            >
+              Fechar
+            </button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

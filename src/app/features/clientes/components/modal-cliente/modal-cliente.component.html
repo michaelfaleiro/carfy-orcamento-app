@@ -1,1 +1,126 @@
-<p>modal-cliente works!</p>
+<div class="modal" style="display: block">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          {{ clienteId ? "Editar Cliente" : "Novo Cliente" }}
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="closeModal()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form
+          [formGroup]="clienteForm"
+          (ngSubmit)="submit()"
+          (keydown.enter)="$event.preventDefault()"
+        >
+          <div>
+            <div class="mb-3">
+              <select
+                class="form-select"
+                name="eTipoPessoa"
+                id="eTipoPessoa"
+                formControlName="eTipoPessoa"
+              >
+                <option value="1">Pessoa Física</option>
+                <option value="2">Pessoa Jurídica</option>
+              </select>
+            </div>
+            <div class="d-flex justify-content-between gap-2">
+              <div class="mb-3 col-6">
+                <label for="nomeRazaoSocial" class="form-label"
+                  >Nome / Razão Social</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="nomeRazaoSocial"
+                  formControlName="nomeRazaoSocial"
+                />
+              </div>
+              <div class="mb-3 col">
+                <label for="nomeFantasia" class="form-label"
+                  >Nome Fantasia</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="nomeFantasia"
+                  formControlName="nomeFantasia"
+                />
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-between gap-2">
+              <div class="mb-3 col-3">
+                <label for="cpfCnpj" class="form-label">CPF/CNPJ</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="cpfCnpj"
+                  formControlName="cpfCnpj"
+                />
+              </div>
+              <div class="mb-3 col-2">
+                <label for="rgIe" class="form-label">RG/IE</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="rgIe"
+                  formControlName="rgIe"
+                />
+              </div>
+              <div class="mb-3 col-2">
+                <label for="telefone" class="form-label">Telefone</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="telefone"
+                  formControlName="telefone"
+                />
+              </div>
+              <div class="mb-3 col">
+                <label for="email" class="form-label">E-mail</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  formControlName="email"
+                />
+              </div>
+            </div>
+
+            <div></div>
+            <div>
+              <div class="mb-3">
+                <label for="observacao" class="form-label">Observacao</label>
+                <textarea
+                  class="form-control"
+                  id="observacao"
+                  rows="2"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="div modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+                (click)="closeModal()"
+              >
+                Cancelar
+              </button>
+              <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

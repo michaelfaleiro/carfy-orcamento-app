@@ -1,1 +1,49 @@
-<p>clientes works!</p>
+<div class="container-fluid h-100 d-flex flex-column">
+  @if(isModalCliente){
+  <app-modal-cliente
+    (close)="showModalCliente()"
+    (updateCliente)="getAllClientes()"
+    [clienteId]="clienteId"
+  />
+  }
+  <div>
+    <h6 class="text-center">Clientes</h6>
+  </div>
+  <section class="d-flex h-100 flex-column">
+    <div>
+      <p>Filtros</p>
+      <button (click)="showModalCliente()" class="btn btn-sm btn-secondary">
+        Novo
+      </button>
+    </div>
+    <div class="flex-grow-1">
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Telefone</th>
+            <th>Email</th>
+            <th>Tipo Pessoa</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody *ngIf="clientes$ | async as clientes">
+          <tr *ngFor="let cliente of clientes">
+            <td>{{ cliente.nomeRazaoSocial | titlecase }}</td>
+            <td>{{ cliente.telefone }}</td>
+            <td>{{ cliente.email || "Email não informado" | lowercase }}</td>
+            <td>{{ cliente.eTipoPessoa }}</td>
+            <td>
+              <button
+                class="btn btn-sm btn-primary"
+                (click)="editCliente(cliente.id!)"
+              >
+                Editar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

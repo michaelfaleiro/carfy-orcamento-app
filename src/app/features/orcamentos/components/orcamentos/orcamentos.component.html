@@ -1,1 +1,45 @@
-<p>orcamentos works!</p>
+<div class="container-fluid h-100 d-flex flex-column">
+  @if(isModalOrcamento){
+  <app-modal-orcamento
+    (close)="showModalOrcamento()"
+    (updateOrcamento)="getAllOrcamentos()"
+    [orcamentoId]="orcamentoId"
+  />
+  }
+
+  <div class="text-center">
+    <h5>Listar Orçamentos</h5>
+  </div>
+  <button (click)="showModalOrcamento()">Novo</button>
+  <section>
+    <table class="table table-hover table-striped table-sm">
+      <thead>
+        <tr>
+          <th class="col-1">Status</th>
+          <th class="col">Nome</th>
+          <th class="col-1">Telefone</th>
+          <th class="col-1">Modelo</th>
+          <th class="col-1">Placa</th>
+          <th class="col-1">Chassis</th>
+          <th class="col-1">Vendedor</th>
+          <th>Opções</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="orcamentos$ | async as orcamentos">
+        <tr *ngFor="let orcamento of orcamentos">
+          <td>{{ orcamento.status }}</td>
+          <td>{{ orcamento.cliente.nomeRazaoSocial }}</td>
+          <td>{{ orcamento.cliente.telefone }}</td>
+          <td>{{ orcamento.veiculo.modelo }}</td>
+          <td>{{ orcamento.veiculo.placa }}</td>
+          <td>{{ orcamento.veiculo.chassi }}</td>
+          <td>{{ orcamento.vendedor }}</td>
+          <td>
+            <a routerLink="/orcamento/{{ orcamento.id }}">Editar</a>
+            <button>Excluir</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</div>

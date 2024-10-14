@@ -1,0 +1,279 @@
+@if(isModalItemAvulso){
+<app-modal-item-avulso
+  (close)="showModalItemAvulso()"
+  (updateItem)="getOrcamento(orcamentoId)"
+  [orcamentoId]="orcamentoId"
+  [itemAvulso]="itemAvulso"
+/>
+}
+<div class="container h-100 d-flex flex-column p-1 gap-1">
+  <section
+    class="d-flex gap-2 bg-secondary-subtle p-1 border-1 rounded-2"
+    *ngIf="orcamento$ | async as orcamento"
+  >
+    <div class="flex-grow-1">
+      <div class="fake-input-container">
+        <label>Nome:</label>
+        <div class="fake-input">
+          {{ orcamento.cliente.nomeRazaoSocial | titlecase }}
+        </div>
+      </div>
+      <div class="fake-input-container">
+        <label>Telefone:</label>
+        <div class="fake-input">
+          <span>
+            {{ orcamento.cliente.telefone | mask : "(00) 00000-0000" }}
+          </span>
+        </div>
+      </div>
+      <div class="fake-input-container">
+        <label>Email:</label>
+        <div class="fake-input">
+          {{ orcamento.cliente.email || "Não Informado" | lowercase }}
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="fake-input-container">
+        <label>Modelo:</label>
+        <div class="fake-input">{{ orcamento.veiculo.modelo | titlecase }}</div>
+      </div>
+      <div class="fake-input-container">
+        <label>Placa:</label>
+        <div class="fake-input">
+          {{ orcamento.veiculo.placa || "Não Informado" | uppercase }}
+        </div>
+      </div>
+      <div class="fake-input-container">
+        <label>Chassis:</label>
+        <div class="fake-input">
+          {{ orcamento.veiculo.chassi || "Não Informado" | uppercase }}
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="fake-input-container">
+        <label>Ano:</label>
+        <div class="fake-input">
+          {{ orcamento.veiculo.ano || "Não Informado" }}
+        </div>
+      </div>
+      <div class="fake-input-container">
+        <label>Cor:</label>
+        <div class="fake-input">
+          {{ orcamento.veiculo.cor || "Não Informado" | titlecase }}
+        </div>
+      </div>
+      <form [formGroup]="statusForm">
+        <div class="fake-input-container">
+          <label>Status:</label>
+          <select
+            class="form-select"
+            formControlName="status"
+            (change)="alterarStatus()"
+          >
+            <option [value]="1">Novo</option>
+            <option [value]="2">Finalizado</option>
+            <option [value]="3">Em Andamento</option>
+            <option [value]="4">Aguardando Cotação</option>
+            <option [value]="5">Negociação</option>
+            <option [value]="6">Fechamento</option>
+            <option [value]="7">Cliente Comprou Já Comprou</option>
+            <option [value]="8">Preço</option>
+            <option [value]="9">Prazo Encomenda</option>
+            <option [value]="10">Prazo de Entrega</option>
+            <option [value]="11">Problema no Pagamento</option>
+          </select>
+        </div>
+      </form>
+    </div>
+    <div class="col">
+      <div class="fake-input-container">
+        <label>Aberto:</label>
+        <div class="fake-input">
+          {{ orcamento.createdAt | date : "dd/MM/yyyy HH:mm" : "-3000" }}
+        </div>
+      </div>
+      <div class="fake-input-container">
+        <label>Atualizado:</label>
+        <div class="fake-input">
+          {{ orcamento.updatedAt | date : "dd/MM/yyyy HH:mm" : "-3000" }}
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Inicio Botões  -->
+  <section class="bg-secondary-subtle p-1 border-1 rounded-2">
+    <div class="d-flex gap-1 p-1">
+      <button (click)="showModalItemAvulso()" class="btn btn-sm btn-primary">
+        Item Avulso
+      </button>
+      <button class="btn btn-sm btn-primary">PDF</button>
+      <button class="btn btn-sm btn-primary">Enviar por Email</button>
+      <button (click)="showModalCotacao()" class="btn btn-sm btn-primary">
+        Cotação
+      </button>
+    </div>
+  </section>
+  <!-- Fim Botões  -->
+  @if(isModalCotacao){
+  <div class="flex-grow-1 bg-secondary-subtle p-1 border-1 rounded-2">
+    <app-cotacao
+      (close)="showModalCotacao()"
+      [cotacoes]="(orcamento$ | async)?.cotacoes || []"
+    />
+  </div>
+  } @else {
+  <!-- Inicio Produtos -->
+  <section class="bg-body-secondary p-2 border-1 rounded-2 produtos-section">
+    <table class="table table-sm table-hover table-striped">
+      <thead>
+        <tr>
+          <th>Quant</th>
+          <th>Sku</th>
+          <th>Descrição</th>
+          <th>Valor Unitário</th>
+          <th>Valor Total</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="orcamento$ | async as orcamento">
+        <tr *ngFor="let item of orcamento.itens">
+          <td>{{ item.quantidade }}</td>
+          <td>{{ item.sku | uppercase }}</td>
+          <td>{{ item.descricao | titlecase }}</td>
+          <td>{{ item.valorVenda | currency }}</td>
+          <td>{{ item.valorVenda * item.quantidade | currency }}</td>
+          <td class="d-flex gap-1">
+            <button
+              (click)="editarItemAvulso(itemAvulso)"
+              class="btn btn-sm btn-secondary"
+            >
+              <i class="fa-solid fa-pen"></i>
+            </button>
+            <button
+              (click)="removerItemAvulso(itemAvulso)"
+              class="btn btn-sm btn-danger"
+            >
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        <tr *ngFor="let itemAvulso of orcamento.itensAvulsos">
+          <td>{{ itemAvulso.quantidade }}</td>
+          <td>*{{ itemAvulso.sku | uppercase }}</td>
+          <td>{{ itemAvulso.descricao | titlecase }}</td>
+          <td>{{ itemAvulso.valorVenda | currency }}</td>
+          <td>
+            {{ itemAvulso.valorVenda * itemAvulso.quantidade | currency }}
+          </td>
+          <td class="d-flex gap-1">
+            <button
+              (click)="editarItemAvulso(itemAvulso)"
+              class="btn btn-sm btn-secondary"
+            >
+              <i class="fa-solid fa-pen"></i>
+            </button>
+            <button
+              (click)="removerItemAvulso(itemAvulso)"
+              class="btn btn-sm btn-danger"
+            >
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+  <!-- Fim Produtos -->
+
+  <footer class="flex-grow-1 p-2 bg-secondary-subtle rounded-2 p-1">
+    <div class="d-flex h-100 gap-2 justify-content-between">
+      <div class="col">
+        <label for="observacao">Observação</label>
+        <div class="input-group">
+          <textarea
+            class="form-control"
+            id="observacao"
+            name="observacao"
+            [(ngModel)]="observacao"
+            rows="5"
+          ></textarea>
+          <button class="btn btn-primary" (click)="salvarObservacao()">
+            Salvar
+          </button>
+        </div>
+      </div>
+      <div class="col">
+        <label for="observacaoInterna">Observação Interna</label>
+        <div class="input-group">
+          <textarea
+            class="form-control"
+            id="observacaoInterna"
+            name="observacaoInterna"
+            [(ngModel)]="observacaoInterna"
+            rows="5"
+          ></textarea>
+          <button class="btn btn-primary" (click)="salvarObservacaoInterna()">
+            Salvar
+          </button>
+        </div>
+      </div>
+      <div class="col">
+        <h6 class="text-center">Totais</h6>
+        <div class="d-flex justify-content-between">
+          <span>Produtos</span>
+          <span class="form-control input-total">
+            {{ (orcamento$ | async)?.totalProdutos | currency }}
+          </span>
+        </div>
+        <div class="d-flex justify-content-between">
+          <span>Cupom</span>
+          <input
+            type="tel"
+            class="form-control input-total"
+            [(ngModel)]="valorCupomDesconto"
+            (keyup.enter)="atualizarCupomDesconto($event)"
+            autocomplete="off"
+            currencyMask
+            [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
+          />
+        </div>
+        <div class="d-flex justify-content-between">
+          <span>Desconto</span>
+          <input
+            type="tel"
+            class="form-control input-total"
+            [(ngModel)]="valorDesconto"
+            (keyup.enter)="atualizarDesconto($event)"
+            autocomplete="off"
+            currencyMask
+            [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
+          />
+        </div>
+        <div class="d-flex justify-content-between">
+          <span>Frete</span>
+          <input
+            type="tel"
+            class="form-control input-total"
+            [(ngModel)]="valorFrete"
+            (keyup.enter)="atualizarFrete($event)"
+            autocomplete="off"
+            currencyMask
+            [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
+          />
+        </div>
+        <div class="d-flex justify-content-between mt-2">
+          <span>Total</span>
+          <span class="form-control input-total">
+            {{ valorTotalOrcamento | currency }}</span
+          >
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  }
+</div>

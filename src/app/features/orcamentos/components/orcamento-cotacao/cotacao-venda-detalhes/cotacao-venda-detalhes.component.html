@@ -1,0 +1,124 @@
+@if(isModalItem){
+<app-modal-item-cotacao
+  [cotacaoId]="cotacaoId"
+  [item]="item"
+  (updateCotacao)="getCotacaoId()"
+  (close)="showModalItem()"
+/>
+}
+<div class="container-fluid h-100 d-flex flex-column">
+  <section class="d-flex flex-column gap-2">
+    <div class="d-flex gap-2">
+      <button
+        (click)="closeCotacaoVendaDetalhes()"
+        class="btn btn-sm btn-secondary"
+      >
+        <i class="fas fa-arrow-left"></i>
+        Voltar
+      </button>
+      <button (click)="showModalItem()" class="btn btn-sm btn-secondary">
+        Novo Item
+      </button>
+    </div>
+    <div class="bg-dark-subtle">
+      <div class="overflow-auto" style="height: 250px">
+        <table class="table-sm table table-hover table-striped">
+          <thead>
+            <tr>
+              <th scope="col-1">Quant</th>
+              <th scope="col-3">Sku</th>
+              <th scope="col-6">Descrição</th>
+              <th scope="col-1">Tipo</th>
+              <th scope="col-1">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if(itens.length === 0){
+            <tr>
+              <td colspan="5" class="text-center">Nenhum item encontrado</td>
+            </tr>
+            } @else {
+            <tr *ngFor="let item of itens">
+              <td>{{ item.quantidade }}</td>
+              <td>{{ item.sku | uppercase }}</td>
+              <td>{{ item.descricao | titlecase }}</td>
+              <td>{{ item.tipoProduto }}</td>
+              <td class="d-flex gap-2">
+                <button
+                  (click)="editarItemCotacao(item)"
+                  class="btn btn-sm btn-primary"
+                  title="Codigo Equivalente"
+                >
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button
+                  (click)="editarItemCotacao(item)"
+                  class="btn btn-sm btn-primary"
+                  title="Editar"
+                >
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button
+                  (click)="showDetalhesItem(item)"
+                  class="btn btn-sm btn-primary"
+                  title="Detalhes"
+                >
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button
+                  (click)="removerItemCotacao(item.id)"
+                  class="btn btn-sm btn-danger"
+                  title="Remover"
+                >
+                  <i class="fas fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="flex-grow-1">
+      <table class="table-sm table table-hover table-striped">
+        <thead>
+          <tr *ngIf="descricaoItem">
+            <td colspan="7">
+              Item Selecionado : {{ descricaoItem | titlecase }}
+            </td>
+          </tr>
+          <tr>
+            <th scope="col">Quant</th>
+            <th scope="col">Sku</th>
+            <th scope="col">Fabricante</th>
+            <th scope="col">Fornecedor</th>
+            <th scope="col">Prazo Expedição</th>
+            <th scope="col">Valor Venda</th>
+            <th scope="col">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if(precos.length === 0){
+          <tr>
+            <td colspan="7" class="text-center">Nenhum item selecionado</td>
+          </tr>
+          } @else {
+          <tr *ngFor="let preco of precos">
+            <td>{{ preco.quantidadeAtendida }}</td>
+            <td>{{ preco.sku | uppercase }}</td>
+            <td>{{ preco.fabricante | titlecase }}</td>
+            <td>{{ preco.nomeFantasia | titlecase }}</td>
+            <td>{{ preco.prazoExpedicao }}</td>
+            <td>{{ preco.valorVenda | currency }}</td>
+            <td>
+              <button class="btn btn-sm btn-primary">
+                <i class="fas fa-edit"></i>
+              </button>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

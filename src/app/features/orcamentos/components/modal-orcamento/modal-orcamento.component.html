@@ -1,0 +1,69 @@
+<div class="modal" style="display: block">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Novo Orçamento</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="closeModal()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form class="p-2">
+          <div class="form-floating mb-3">
+            <input
+              type="text"
+              class="form-control"
+              id="searchInput"
+              [formControl]="clienteSearch"
+              autocomplete="off"
+            />
+            <label for="clienteSearch"
+              >Busque por nome, telefone ou placa</label
+            >
+          </div>
+        </form>
+        <div class="col-12 p-2 bg-dark-subtle flex-grow-1">
+          <table
+            class="table table-sm table-hover table-striped table-secondary"
+          >
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Telefone</th>
+                <th>Veiculo(s)</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="clientes$ | async as clientes">
+              <tr *ngFor="let cliente of clientes">
+                <td>{{ cliente.nomeRazaoSocial | titlecase }}</td>
+                <td>{{ cliente.telefone | mask : "(00) 0 0000-0000" }}</td>
+                <td>
+                  <ul class="d-flex flex-wrap gap-1">
+                    <li
+                      class="nav-link"
+                      *ngFor="let veiculo of cliente.veiculos"
+                    >
+                      <button class="btn btn-sm btn-secondary">
+                        {{ veiculo.modelo | titlecase }} -
+                        {{ veiculo.placa | uppercase }}
+                      </button>
+                    </li>
+                    <li class="nav-link">
+                      <button class="btn btn-sm btn-secondary">
+                        Novo Carro
+                      </button>
+                    </li>
+                  </ul>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

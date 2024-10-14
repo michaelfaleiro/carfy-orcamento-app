@@ -1,0 +1,39 @@
+.fake-input-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.fake-input-container label {
+  width: 100px;
+  /* Defina uma largura fixa para os rótulos */
+  margin-right: 0.5rem;
+  font-weight: semibold;
+  font-size: .9rem;
+}
+
+.fake-input {
+  display: inline-block;
+  padding: 0.275rem 0.2rem;
+  font-size: .8rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  width: 100%;
+}
+
+.produtos-section {
+  min-height: 45vh;
+  max-height: 45vh;
+  /* Defina a altura máxima conforme necessário */
+  overflow-y: auto;
+  /* Adiciona rolagem vertical */
+}
+
+.input-total {
+  width: 130px;
+  text-align: end;
+}

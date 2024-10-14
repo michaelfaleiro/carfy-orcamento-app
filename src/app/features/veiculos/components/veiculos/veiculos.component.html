@@ -1,0 +1,49 @@
+<div class="container-fluid h-100 d-flex flex-column">
+  @if(isModalVeiculo){
+  <app-modal-veiculo
+    (close)="showModalVeiculo()"
+    (updateVeiculo)="getAllVeiculos()"
+    [veiculoId]="veiculoId"
+  />
+  }
+  <div>
+    <h6 class="text-center">Veículos</h6>
+  </div>
+  <section class="d-flex h-100 flex-column">
+    <div>
+      <p>Filtros</p>
+      <button (click)="showModalVeiculo()" class="btn btn-sm btn-secondary">
+        Novo
+      </button>
+    </div>
+    <div class="flex-grow-1">
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>Placa</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Ano</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody *ngIf="veiculos$ | async as veiculos">
+          <tr *ngFor="let veiculo of veiculos">
+            <td>{{ veiculo.placa }}</td>
+            <td>{{ veiculo.marca }}</td>
+            <td>{{ veiculo.modelo }}</td>
+            <td>{{ veiculo.ano }}</td>
+            <td>
+              <button
+                class="btn btn-sm btn-primary"
+                (click)="editVeiculo(veiculo.id!)"
+              >
+                Editar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
