@@ -7,12 +7,16 @@ import { PrecoItem } from '../../../../../interfaces/cotacao/precoItem';
 import { MessageService } from '../../../../../shared/services/message/message.service';
 import { CotacaoService } from '../../../../cotacoes/services/cotacao.service';
 import { ModalItemCotacaoComponent } from '../modal-item-cotacao/modal-item-cotacao.component';
-import { CodigoEquivalente } from '../../../../../interfaces/cotacao/codigoEquivalente';
+import { ModalCodigoEquivalenteComponent } from '../modal-codigo-equivalente/modal-codigo-equivalente.component';
 
 @Component({
   selector: 'app-cotacao-venda-detalhes',
   standalone: true,
-  imports: [CommonModule, ModalItemCotacaoComponent],
+  imports: [
+    CommonModule,
+    ModalItemCotacaoComponent,
+    ModalCodigoEquivalenteComponent,
+  ],
   templateUrl: './cotacao-venda-detalhes.component.html',
   styleUrl: './cotacao-venda-detalhes.component.css',
 })
@@ -22,7 +26,6 @@ export class CotacaoVendaDetalhesComponent {
   cotacao$ = new Observable<Cotacao>();
   itens: ItemCotacao[] = [];
   precos: PrecoItem[] = [];
-  codigoEquivalente: CodigoEquivalente[] = [];
   item: ItemCotacao = {} as ItemCotacao;
   descricaoItem = '';
   itemId = '';
@@ -74,6 +77,11 @@ export class CotacaoVendaDetalhesComponent {
     this.precos = item.precos;
   }
 
+  showCodigoEquivalente(item: ItemCotacao): void {
+    this.itemId = item.id;
+    this.showModalCodigoEquivalente();
+  }
+
   showModalItem(): void {
     this.isModalItem = !this.isModalItem;
     if (!this.isModalItem) {
@@ -84,7 +92,7 @@ export class CotacaoVendaDetalhesComponent {
   showModalCodigoEquivalente(): void {
     this.isModalCodigoEquivalente = !this.isModalCodigoEquivalente;
     if (!this.isModalCodigoEquivalente) {
-      this.codigoEquivalente = [];
+      this.itemId = '';
     }
   }
 

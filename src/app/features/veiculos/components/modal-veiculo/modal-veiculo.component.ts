@@ -19,6 +19,7 @@ export class ModalVeiculoComponent {
   veiculo$ = new Observable<Veiculo>();
   marcas: Marca[] = [];
   @Input() veiculoId: string = '';
+  @Input() clienteId: string = '';
   @Output() close = new EventEmitter();
   @Output() updateVeiculo = new EventEmitter();
 
@@ -29,6 +30,7 @@ export class ModalVeiculoComponent {
     ano: new FormControl(''),
     cor: new FormControl(''),
     chassi: new FormControl(''),
+    motor: new FormControl(''),
   });
 
   constructor(
@@ -91,6 +93,7 @@ export class ModalVeiculoComponent {
     this.veiculo$.subscribe({
       next: (veiculo) => {
         this.veiculoForm.patchValue(veiculo);
+        this.clienteId = veiculo.clienteId;
       },
       error: (error) => {
         this.message.error(error.error.errors[0]);
@@ -100,12 +103,14 @@ export class ModalVeiculoComponent {
 
   criarVeiculo(): Veiculo {
     return {
+      clienteId: this.clienteId,
       placa: this.veiculoForm.value.placa || '',
       marca: this.veiculoForm.value.marca || '',
       modelo: this.veiculoForm.value.modelo || '',
       ano: this.veiculoForm.value.ano || '',
       cor: this.veiculoForm.value.cor || '',
       chassi: this.veiculoForm.value.chassi || '',
+      motor: this.veiculoForm.value.motor || '',
     };
   }
 

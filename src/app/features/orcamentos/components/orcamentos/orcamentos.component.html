@@ -10,7 +10,21 @@
   <div class="text-center">
     <h5>Listar Orçamentos</h5>
   </div>
-  <button (click)="showModalOrcamento()">Novo</button>
+  <div>
+    <div>
+      <label>Status</label>
+      <select class="form-select" (change)="onStatusChange($event)">
+        <option *ngFor="let status of statusList" [value]="status.status">
+          {{ status.descricao }}
+        </option>
+      </select>
+    </div>
+  </div>
+  <div class="col-3 mb-3">
+    <button class="btn btn-sm btn-secondary" (click)="showModalOrcamento()">
+      Novo
+    </button>
+  </div>
   <section>
     <table class="table table-hover table-striped table-sm">
       <thead>
@@ -27,15 +41,19 @@
       </thead>
       <tbody *ngIf="orcamentos$ | async as orcamentos">
         <tr *ngFor="let orcamento of orcamentos">
-          <td>{{ orcamento.status }}</td>
-          <td>{{ orcamento.cliente.nomeRazaoSocial }}</td>
+          <td>{{ statusOrcamento(orcamento.status) }}</td>
+          <td>{{ orcamento.cliente.nomeRazaoSocial | titlecase }}</td>
           <td>{{ orcamento.cliente.telefone }}</td>
-          <td>{{ orcamento.veiculo.modelo }}</td>
-          <td>{{ orcamento.veiculo.placa }}</td>
-          <td>{{ orcamento.veiculo.chassi }}</td>
-          <td>{{ orcamento.vendedor }}</td>
-          <td>
-            <a routerLink="/orcamento/{{ orcamento.id }}">Editar</a>
+          <td>{{ orcamento.veiculo.modelo | titlecase }}</td>
+          <td>{{ orcamento.veiculo.placa | uppercase }}</td>
+          <td>{{ orcamento.veiculo.chassi | uppercase }}</td>
+          <td>{{ orcamento.vendedor | titlecase }}</td>
+          <td class="d-flex gap-2">
+            <a
+              class="btn btn-sm btn-secondary"
+              routerLink="/orcamento/{{ orcamento.id }}"
+              >Editar</a
+            >
             <button>Excluir</button>
           </td>
         </tr>

@@ -7,6 +7,11 @@
     ></app-cotacao-venda-detalhes>
     } @else {
     <div>
+      <div>
+        <button (click)="createCotacao()" class="btn btn-sm btn-secondary">
+          Nova Cotação
+        </button>
+      </div>
       <table class="table table-sm table-striped table-hover">
         <thead>
           <tr>
@@ -19,12 +24,12 @@
         <tbody>
           <tr *ngFor="let cotacao of cotacoes">
             <td>
-              {{ cotacao.createdAt | date : "dd/MM/yyyy HH:mm" : "-3000" }}
+              {{ cotacao.createdAt | date : "dd/MM/yyyy HH:mm" }}
             </td>
             <td>
-              {{ cotacao.updatedAt | date : "dd/MM/yyyy HH:mm " : "-3000" }}
+              {{ cotacao.updatedAt | date : "dd/MM/yyyy HH:mm " }}
             </td>
-            <td>{{ cotacao.status }}</td>
+            <td>{{ statusCotacao(cotacao.status) }}</td>
             <td>
               <button
                 class="btn btn-sm btn-primary"

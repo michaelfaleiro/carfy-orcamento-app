@@ -3,14 +3,20 @@ import { Observable } from 'rxjs';
 import { Cliente } from '../../../../interfaces/cliente/cliente';
 import { CommonModule } from '@angular/common';
 import { ClienteService } from '../../services/cliente.service';
-import { Orcamento } from '../../../../interfaces/orcamento/orcamento';
 import { MessageService } from '../../../../shared/services/message/message.service';
 import { ModalClienteComponent } from '../modal-cliente/modal-cliente.component';
+import { ModalVeiculoComponent } from '../../../veiculos/components/modal-veiculo/modal-veiculo.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-clientes',
   standalone: true,
-  imports: [CommonModule, ModalClienteComponent],
+  imports: [
+    CommonModule,
+    ModalClienteComponent,
+    ModalVeiculoComponent,
+    RouterLink,
+  ],
   templateUrl: './clientes.component.html',
   styleUrl: './clientes.component.css',
 })

@@ -33,13 +33,20 @@
             <td>{{ cliente.telefone }}</td>
             <td>{{ cliente.email || "Email não informado" | lowercase }}</td>
             <td>{{ cliente.eTipoPessoa }}</td>
-            <td>
+            <td class="d-flex gap-2">
               <button
                 class="btn btn-sm btn-primary"
                 (click)="editCliente(cliente.id!)"
               >
                 Editar
               </button>
+              <a
+                routerLink="/cliente/{{ cliente.id }}"
+                class="btn btn-sm btn-secondary"
+                title="Detalhes"
+              >
+                <i class="fa-solid fa-car"></i>
+              </a>
             </td>
           </tr>
         </tbody>

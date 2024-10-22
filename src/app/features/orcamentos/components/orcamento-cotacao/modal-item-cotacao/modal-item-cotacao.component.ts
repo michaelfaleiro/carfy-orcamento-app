@@ -8,12 +8,7 @@ import {
 } from '@angular/core';
 import { MessageService } from '../../../../../shared/services/message/message.service';
 import { CotacaoService } from '../../../../cotacoes/services/cotacao.service';
-import {
-  FormGroup,
-  FormControl,
-  ReactiveFormsModule,
-  FormBuilder,
-} from '@angular/forms';
+import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { AdicionarItemCotacaoRequest } from '../../../../../interfaces/cotacao/adicionarItemCotacaoRequest';
 import { ItemCotacao } from '../../../../../interfaces/cotacao/itemCotacao';
 
@@ -26,11 +21,10 @@ import { ItemCotacao } from '../../../../../interfaces/cotacao/itemCotacao';
 })
 export class ModalItemCotacaoComponent {
   @ViewChild('quantidadeInput') quantidadeInput!: ElementRef;
-  @Input() item: ItemCotacao = {} as ItemCotacao;
   @Input() cotacaoId = '';
+  @Input() item: ItemCotacao = {} as ItemCotacao;
   @Output() close = new EventEmitter<void>();
   @Output() updateCotacao = new EventEmitter<void>();
-  itemId = '';
 
   itemForm = new FormGroup({
     sku: new FormControl(''),

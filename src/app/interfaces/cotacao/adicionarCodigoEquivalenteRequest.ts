@@ -1,4 +1,5 @@
 export interface AdicionarCodigoEquivalenteRequest {
+  id?: string;
   cotacaoId: string;
   itemId: string;
   sku: string;

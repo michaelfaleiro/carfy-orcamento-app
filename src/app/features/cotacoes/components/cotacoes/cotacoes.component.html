@@ -1,1 +1,27 @@
-<p>cotacoes works!</p>
+<div class="container h-100 d-flex flex-column">
+  <div>
+    <h6>Cotações</h6>
+  </div>
+  <div>
+    <table class="table table-sm table-striped table-hover">
+      <thead>
+        <tr>
+          <th scope="col">Status</th>
+          <th scope="col">Aberta em</th>
+          <th scope="col">Última Atualização</th>
+          <th scope="col">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cotacao of cotacoes$ | async">
+          <td>{{ statusCotacao(cotacao.status) }}</td>
+          <td>{{ cotacao.createdAt | date : "dd/MM/yyyy HH:mm" }}</td>
+          <td>{{ cotacao.updatedAt | date : "dd/MM/yyyy HH:mm" }}</td>
+          <td>
+            <a [routerLink]="['/cotacao', cotacao.id]">Visualizar</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

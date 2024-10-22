@@ -7,6 +7,7 @@ import { RegisterCotacaoRequest } from '../../../interfaces/cotacao/registerCota
 import { AdicionarItemCotacaoRequest } from '../../../interfaces/cotacao/adicionarItemCotacaoRequest';
 import { AdicionarPrecoItemCotacaoRequest } from '../../../interfaces/cotacao/adicionarPrecoItemCotacaoRequest';
 import { AdicionarCodigoEquivalenteRequest } from '../../../interfaces/cotacao/adicionarCodigoEquivalenteRequest';
+import { ItemCotacao } from '../../../interfaces/cotacao/itemCotacao';
 
 @Injectable({
   providedIn: 'root',
@@ -34,8 +35,16 @@ export class CotacaoService {
       .pipe(map((response) => response.data));
   }
 
-  atualizarStatusCotacao(status: RegisterCotacaoRequest): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/status`, status);
+  atualizarStatusCotacao(cotacaoId: string, status: number): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/status`, { cotacaoId, status });
+  }
+
+  getItemCotacao(itemId: string): Observable<ItemCotacao> {
+    return this.http
+      .get<{ data: ItemCotacao; errors: string[] }>(
+        `${this.apiUrl}/itens/${itemId}`
+      )
+      .pipe(map((response) => response.data));
   }
 
   adicionarItemCotacao(item: AdicionarItemCotacaoRequest): Observable<void> {

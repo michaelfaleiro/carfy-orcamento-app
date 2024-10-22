@@ -5,6 +5,11 @@
   (updateCotacao)="getCotacaoId()"
   (close)="showModalItem()"
 />
+} @if(isModalCodigoEquivalente){
+<app-modal-codigo-equivalente
+  [itemId]="itemId"
+  (close)="showModalCodigoEquivalente()"
+/>
 }
 <div class="container-fluid h-100 d-flex flex-column">
   <section class="d-flex flex-column gap-2">
@@ -45,11 +50,11 @@
               <td>{{ item.tipoProduto }}</td>
               <td class="d-flex gap-2">
                 <button
-                  (click)="editarItemCotacao(item)"
+                  (click)="showCodigoEquivalente(item)"
                   class="btn btn-sm btn-primary"
                   title="Codigo Equivalente"
                 >
-                  <i class="fas fa-edit"></i>
+                  <i class="fa-solid fa-barcode"></i>
                 </button>
                 <button
                   (click)="editarItemCotacao(item)"
@@ -104,10 +109,10 @@
           </tr>
           } @else {
           <tr *ngFor="let preco of precos">
-            <td>{{ preco.quantidadeAtendida }}</td>
+            <td>{{ preco.quantidade }}</td>
             <td>{{ preco.sku | uppercase }}</td>
             <td>{{ preco.fabricante | titlecase }}</td>
-            <td>{{ preco.nomeFantasia | titlecase }}</td>
+            <td>{{ preco.fornecedor | titlecase }}</td>
             <td>{{ preco.prazoExpedicao }}</td>
             <td>{{ preco.valorVenda | currency }}</td>
             <td>

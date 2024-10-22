@@ -1,0 +1,8 @@
+[
+  { "status": 1, "descricao": "Nova" },
+  { "status": 2, "descricao": "Em Andamento" },
+  { "status": 3, "descricao": "Enviada" },
+  { "status": 4, "descricao": "Repondida Parcial" },
+  { "status": 5, "descricao": "Finalizada" },
+  { "status": 6, "descricao": "Cancelada" }
+]

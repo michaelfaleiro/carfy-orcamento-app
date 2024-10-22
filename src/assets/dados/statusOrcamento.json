@@ -1,0 +1,13 @@
+[
+  { "status": 1, "descricao": "Novo" },
+  { "status": 2, "descricao": "Finalizado" },
+  { "status": 3, "descricao": "Em andamento" },
+  { "status": 4, "descricao": "Aguardando Cotação" },
+  { "status": 5, "descricao": "Negociação" },
+  { "status": 6, "descricao": "Fechamento" },
+  { "status": 7, "descricao": "Cliente Comprou Já Comprou" },
+  { "status": 8, "descricao": "Preço" },
+  { "status": 9, "descricao": "Prazo Encomenda" },
+  { "status": 10, "descricao": "Prazo de Entrega" },
+  { "status": 11, "descricao": "Problema no Pagamento" }
+]

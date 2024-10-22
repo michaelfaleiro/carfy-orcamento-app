@@ -16,6 +16,8 @@ import {
   FormsModule,
 } from '@angular/forms';
 import { CotacaoComponent } from '../orcamento-cotacao/cotacao/cotacao.component';
+import { Status } from '../../../../interfaces/status';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-orcamento',
@@ -46,13 +48,15 @@ export class OrcamentoComponent {
   isPercent: boolean = false;
   observacao: string = '';
   observacaoInterna: string = '';
+  statusList: Status[] = [];
   statusForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
     private orcamentoService: OrcamentoService,
     private message: MessageService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private http: HttpClient
   ) {
     this.statusForm = this.fb.group({
       status: [''],
@@ -63,6 +67,7 @@ export class OrcamentoComponent {
     this.orcamentoId = this.route.snapshot.paramMap.get('id')!;
     if (this.orcamentoId) {
       this.getOrcamento(this.orcamentoId);
+      this.carregarListaStatus();
     } else {
       this.message.error('Orçamento não encontrado!');
     }
@@ -72,7 +77,9 @@ export class OrcamentoComponent {
     this.orcamento$ = this.orcamentoService.getById(orcamentoId);
     this.orcamento$.subscribe({
       next: (orcamento: Orcamento) => {
-        this.statusForm.get('status')?.setValue(orcamento.status);
+        this.statusForm.patchValue({
+          status: orcamento.status,
+        });
         this.valorFrete = orcamento.valorFrete;
         this.valorDesconto = orcamento.valorDesconto;
         this.valorCupomDesconto = orcamento.cupomDesconto;
@@ -87,7 +94,7 @@ export class OrcamentoComponent {
   }
 
   alterarStatus() {
-    const novoStatus = this.statusForm.get('status')?.value;
+    const novoStatus = Number(this.statusForm.get('status')?.value);
     this.orcamentoService
       .alterarStatus({ id: this.orcamentoId, status: novoStatus })
       .subscribe({
@@ -211,6 +218,19 @@ export class OrcamentoComponent {
 
   showModalCotacao() {
     this.isModalCotacao = !this.isModalCotacao;
+  }
+
+  carregarListaStatus() {
+    this.http
+      .get<Status[]>('../../../../../assets/dados/statusOrcamento.json')
+      .subscribe({
+        next: (statusList) => {
+          this.statusList = statusList;
+        },
+        error: (error) => {
+          this.message.error(error.error.errors[0]);
+        },
+      });
   }
 
   removeFocus(event: KeyboardEvent) {

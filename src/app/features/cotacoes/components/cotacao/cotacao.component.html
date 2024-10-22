@@ -1,1 +1,189 @@
-<p>cotacao works!</p>
+@if(isModalItemCotacao){
+<app-modal-item-cotacao
+  (close)="showModalItemCotacao()"
+  (updateCotacao)="getCotacaoId()"
+  [item]="item"
+  [cotacaoId]="cotacaoId"
+/>
+} @if(isModalCodigoEquivalente){
+<app-modal-codigo-equivalente
+  [itemId]="itemId"
+  (close)="showModalCodigoEquivalente(itemId)"
+/>
+} @if(isModalPrecoFornecedor){
+<app-modal-preco-fornecedor
+  (close)="closeModalPrecoFornecedor()"
+  (update)="updatePrecoItem()"
+  [precoItem]="precoItem"
+  [item]="item"
+  [itemDescricao]="itemDescricao"
+/>
+}
+<div class="container h-100 d-flex flex-column gap-1">
+  <div class="d-flex gap-1 bg-secondary-subtle p-2 rounded-2 border-1">
+    <div class="col-3">
+      <div class="fake-input-container">
+        <label>Modelo:</label>
+        <div class="fake-input">Corsa</div>
+      </div>
+      <div class="fake-input-container">
+        <label>Placa:</label>
+        <div class="fake-input">MFX8H17</div>
+      </div>
+      <div class="fake-input-container">
+        <label>Chassi:</label>
+        <div class="fake-input">KNMHJJK1234567890</div>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="fake-input-container">
+        <label>Ano:</label>
+        <div class="fake-input">2009</div>
+      </div>
+      <div class="fake-input-container">
+        <label>Motor:</label>
+        <div class="fake-input">2.0 16v</div>
+      </div>
+    </div>
+    <div>
+      <div class="fake-input-container">
+        <label>Aberto:</label>
+        <div class="fake-input">
+          {{ (cotacao$ | async)?.createdAt | date : "dd/MM/yyyy HH:mm" }}
+        </div>
+      </div>
+      <div class="fake-input-container">
+        <label>Atualizado:</label>
+        <div class="fake-input">
+          {{ (cotacao$ | async)?.updatedAt | date : "dd/MM/yyyy HH:mm" }}
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <form [formGroup]="statusForm">
+        <div class="fake-input-container">
+          <label>Status:</label>
+          <select
+            class="form-select"
+            formControlName="status"
+            (change)="alterarStatus()"
+          >
+            <option *ngFor="let status of statusList" [value]="status.status">
+              {{ status.descricao }}
+            </option>
+          </select>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <section class="bg-secondary-subtle p-2 rounded-2 border-1 h-100">
+    <div class="col mb-2 d-flex gap-1">
+      <button class="btn btn-sm btn-secondary">
+        <i class="fas fa-arrow-left"></i>
+        Voltar
+      </button>
+      <button (click)="novoItem()" class="btn btn-sm btn-secondary">
+        Novo Item
+      </button>
+    </div>
+    <div class="d-flex gap-1 justify-content-between">
+      <div class="col-3 overflow-auto" style="height: 73vh">
+        <table class="table table-sm table-striped table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Qt</th>
+              <th scope="col">Descrição</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of (cotacao$ | async)?.itens">
+              <td>{{ item.quantidade }}</td>
+              <td (click)="getPrecoItem(item)" class="d-flex flex-column">
+                <span> Sku: {{ item.sku | uppercase }} </span>
+                <span>
+                  {{ item.descricao | titlecase }}
+                </span>
+                <span>
+                  {{ item.tipoProduto }}
+                </span>
+              </td>
+              <td class="d-flex gap-1">
+                <button
+                  (click)="editarItem(item)"
+                  class="btn btn-sm btn-secondary"
+                  title="Editar"
+                >
+                  <i class="fa-solid fa-pen"></i>
+                </button>
+                <button
+                  (click)="novoPrecoFornecedor(item)"
+                  class="btn btn-sm btn-secondary"
+                  title="Preço Fornecedor"
+                >
+                  <i class="fa-solid fa-hand-holding-dollar"></i>
+                </button>
+                <button
+                  (click)="showModalCodigoEquivalente(item.id)"
+                  class="btn btn-sm btn-secondary"
+                  title="Código Equivalente"
+                >
+                  <i class="fa-solid fa-barcode"></i>
+                </button>
+                <button class="btn btn-sm btn-danger" title="Excluir Item">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex-grow-1">
+        <table class="table table-sm table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Qt</th>
+              <th>Sku</th>
+              <th>Fabricante</th>
+              <th>Fornecedor</th>
+              <th>Prazo</th>
+              <th>DropShip</th>
+              <th>Custo</th>
+              <th>Frete</th>
+              <th>Venda</th>
+              <td>Ações</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let preco of precos">
+              <td>{{ preco.quantidade }}</td>
+              <td>{{ preco.sku | uppercase }}</td>
+              <td>{{ preco.fabricante | titlecase }}</td>
+              <td>{{ preco.fornecedor | titlecase }}</td>
+              <td>{{ preco.prazoExpedicao }}</td>
+              <td></td>
+              <td>{{ preco.valorCusto | currency }}</td>
+              <td></td>
+              <td>{{ preco.valorVenda | currency }}</td>
+              <td class="d-flex gap-2">
+                <button
+                  (click)="editarPrecoItem(preco)"
+                  class="btn btn-sm btn-secondary"
+                >
+                  <i class="fa-solid fa-pen"></i>
+                </button>
+                <button
+                  (click)="removerPrecoItem(preco)"
+                  class="btn btn-sm btn-danger"
+                >
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,146 @@
+<div class="modal" style="display: block">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Preço do Fornecedor</h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form
+          [formGroup]="precoItemForm"
+          (ngSubmit)="submit()"
+          (keydown.enter)="$event.preventDefault()"
+        >
+          <div>
+            <div class="col">
+              <label class="form-label" for="fornecedorId">Fornecedor</label>
+              <select
+                class="form-select"
+                id="fornecedorId"
+                name="fornecedorId"
+                formControlName="fornecedorId"
+              >
+                <option
+                  *ngFor="let fornecedor of fornecedores"
+                  [value]="fornecedor.id"
+                >
+                  {{ fornecedor.nomeFantasia }}
+                </option>
+              </select>
+            </div>
+
+            <div class="d-flex gap-2 justify-content-between">
+              <div class="col-2">
+                <label for="quantidade" class="form-label">Quant</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="quantidade"
+                  name="quantidade"
+                  formControlName="quantidade"
+                />
+              </div>
+
+              <div class="col">
+                <label for="sku" class="form-label">SKU</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="sku"
+                  name="sku"
+                  formControlName="sku"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="descricao" class="form-label">Descrição</label>
+            <input
+              type="text"
+              class="form-control"
+              id="descricao"
+              name="descricao"
+              formControlName="descricao"
+            />
+          </div>
+
+          <div class="col mb-3">
+            <label class="form-label" for="fabricanteId">Fabricante</label>
+            <select
+              class="form-select"
+              id="fabricanteId"
+              name="fabricanteId"
+              formControlName="fabricanteId"
+            >
+              <option
+                *ngFor="let fabricante of fabricantes"
+                [value]="fabricante.id"
+              >
+                {{ fabricante.fabricante }}
+              </option>
+            </select>
+          </div>
+
+          <div class="d-flex justify-content-between gap-2 mb-3">
+            <div>
+              <label for="valorCusto" class="form-label">Valor Custo</label>
+              <input
+                type="text"
+                class="form-control"
+                id="valorCusto"
+                name="valorCusto"
+                formControlName="valorCusto"
+                currencyMask
+                [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
+              />
+            </div>
+
+            <div>
+              <label for="valorVenda" class="form-label">Valor Venda</label>
+              <input
+                type="text"
+                class="form-control"
+                id="valorVenda"
+                name="valorVenda"
+                formControlName="valorVenda"
+                currencyMask
+                [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
+              />
+            </div>
+            <div>
+              <label for="prazoExpedicao" class="form-label">Prazo</label>
+              <input
+                type="number"
+                class="form-control"
+                id="prazoExpedicao"
+                name="prazoExpedicao"
+                formControlName="prazoExpedicao"
+              />
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="observacao" class="form-label">Observação</label>
+            <textarea
+              class="form-control"
+              id="observacao"
+              name="observacao"
+              formControlName="observacao"
+            ></textarea>
+          </div>
+
+          <div class="d-flex gap-2 justify-content-end">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="closeModal()"
+            >
+              Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

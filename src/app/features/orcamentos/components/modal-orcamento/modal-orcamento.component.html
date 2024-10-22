@@ -47,15 +47,21 @@
                       class="nav-link"
                       *ngFor="let veiculo of cliente.veiculos"
                     >
-                      <button class="btn btn-sm btn-secondary">
+                      <button
+                        (click)="create(veiculo)"
+                        class="btn btn-sm btn-secondary"
+                      >
                         {{ veiculo.modelo | titlecase }} -
                         {{ veiculo.placa | uppercase }}
                       </button>
                     </li>
                     <li class="nav-link">
-                      <button class="btn btn-sm btn-secondary">
+                      <a
+                        routerLink="/cliente/{{ cliente.id }}"
+                        class="btn btn-sm btn-secondary"
+                      >
                         Novo Carro
-                      </button>
+                      </a>
                     </li>
                   </ul>
                 </td>

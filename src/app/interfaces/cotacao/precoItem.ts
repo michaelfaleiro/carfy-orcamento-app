@@ -1,11 +1,12 @@
 export interface PrecoItem {
   id: string;
+  cotacaoId: string;
   itemId: string;
   fornecedorId: string;
-  nomeFantasia: string;
+  fornecedor: string;
   fabricanteId: string;
   fabricante: string;
-  quantidadeAtendida: number;
+  quantidade: number;
   sku: string;
   valorCusto: number;
   valorVenda: number;

@@ -15,11 +15,19 @@ import { Cliente } from '../../../../interfaces/cliente/cliente';
 import { ClienteService } from '../../../clientes/services/cliente.service';
 import { CommonModule } from '@angular/common';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
+import { Router, RouterLink } from '@angular/router';
+import { Veiculo } from '../../../../interfaces/veiculo/veiculo';
 
 @Component({
   selector: 'app-modal-orcamento',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NgxMaskPipe, NgxMaskDirective],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    NgxMaskPipe,
+    NgxMaskDirective,
+    RouterLink,
+  ],
   templateUrl: './modal-orcamento.component.html',
   styleUrl: './modal-orcamento.component.css',
 })
@@ -34,7 +42,8 @@ export class ModalOrcamentoComponent {
   constructor(
     private clienteService: ClienteService,
     private orcamentoService: OrcamentoService,
-    private message: MessageService
+    private message: MessageService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -59,12 +68,19 @@ export class ModalOrcamentoComponent {
 
   submit() {}
 
-  create(orcamento: RegisterOrcamentoRequest) {
+  create(veiculo: Veiculo) {
+    const orcamento: RegisterOrcamentoRequest = {
+      clienteId: veiculo.clienteId,
+      veiculoId: veiculo.id!,
+      vendedor: 'Michael',
+      status: 1,
+    };
     this.orcamentoService.create(orcamento).subscribe({
-      next: () => {
+      next: (orcamento) => {
         this.message.success('Orçamento criado com sucesso!');
         this.close.emit();
         this.updateOrcamento.emit();
+        this.router.navigate(['/orcamento/' + orcamento.id]);
       },
       error: (error) => {
         this.message.error(error.error.errors[0]);
