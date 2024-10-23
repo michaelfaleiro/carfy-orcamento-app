@@ -20,10 +20,18 @@ export class OrcamentoService {
       .pipe(map((response) => response.data));
   }
 
-  getAll(status?: string): Observable<Orcamento[]> {
+  getAll(
+    search: string = '',
+    status: string = '',
+    pageNumber: number = 1,
+    pageSize: number = 25,
+    startDate: Date | string = '',
+    endDate: Date | string = '',
+    sort: string | string = ''
+  ): Observable<Orcamento[]> {
     return this.http
       .get<{ data: Orcamento[] }>(
-        `${this.url}?pageNumber=1&pageSize=30&status=${status}&orderBy=CreatedAt`
+        `${this.url}?pageNumber=${pageNumber}&pageSize=${pageSize}&status=${status}&sort=${sort}&startDate=${startDate}&endDate=${endDate}&search=${search}`
       )
       .pipe(map((response) => response.data));
   }

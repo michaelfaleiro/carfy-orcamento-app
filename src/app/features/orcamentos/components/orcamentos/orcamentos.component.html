@@ -1,35 +1,102 @@
-<div class="container-fluid h-100 d-flex flex-column">
+<div class="container h-100 d-flex flex-column gap-2">
   @if(isModalOrcamento){
   <app-modal-orcamento
     (close)="showModalOrcamento()"
-    (updateOrcamento)="getAllOrcamentos()"
     [orcamentoId]="orcamentoId"
   />
   }
 
-  <div class="text-center">
-    <h5>Listar Orçamentos</h5>
+  <div class="bg-secondary-subtle p-2 shadow rounded-2 border">
+    <form [formGroup]="filtrosForm" (ngSubmit)="submit()">
+      <div class="row d-flex">
+        <div class="col-3">
+          <label class="form-label col-form-label-sm" for="search">Nome</label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            formControlName="search"
+            placeholder="Buscar por Nome"
+          />
+        </div>
+        <div class="col-3">
+          <label class="form-label col-form-label-sm" for="startDate"
+            >Data Inicial</label
+          >
+          <input
+            type="date"
+            class="form-control form-control-sm"
+            formControlName="startDate"
+          />
+        </div>
+        <div class="col-3">
+          <label class="form-label col-form-label-sm" for="endDate"
+            >Data Final</label
+          >
+          <input
+            type="date"
+            class="form-control form-control-sm"
+            formControlName="endDate"
+          />
+        </div>
+        <div class="col-3">
+          <label class="form-label col-form-label-sm" for="status"
+            >Status</label
+          >
+          <select class="form-select form-select-sm" formControlName="status">
+            <option value="">Todos</option>
+            <option *ngFor="let status of statusList" [value]="status.status">
+              {{ status.descricao }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="row d-flex">
+        <div class="col-3 mb-3">
+          <label class="form-label col-form-label-sm" for="vendedor"
+            >Vendedor</label
+          >
+          <select class="form-select form-select-sm" formControlName="vendedor">
+            <option value="">Todos</option>
+            <option value="michael">Michael</option>
+            <option value="welligton">Welligton</option>
+            <option value="nicollas">Nicollas</option>
+          </select>
+        </div>
+        <div class="col-3">
+          <label for="sort" class="form-label col-form-label-sm"
+            >Ordenar por</label
+          >
+          <select class="form-select form-select-sm" formControlName="sort">
+            <option value="CreatedAt">Data de Abertura</option>
+            <option value="CreatedAtDesc">Data de Abertura Descedente</option>
+            <option value="UpdatedAt">Data de Atualização</option>
+            <option value="UpdatedAtDesc">
+              Data de Atualização Descedente
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3 mb-3">
+          <button class="btn btn-sm btn-secondary" type="submit">
+            Filtrar
+          </button>
+        </div>
+      </div>
+    </form>
   </div>
-  <div>
-    <div>
-      <label>Status</label>
-      <select class="form-select" (change)="onStatusChange($event)">
-        <option *ngFor="let status of statusList" [value]="status.status">
-          {{ status.descricao }}
-        </option>
-      </select>
+  <section class="bg-secondary-subtle p-2 shadow rounded-2 border flex-grow-1">
+    <div class="col-3 mb-2">
+      <button class="btn btn-sm btn-secondary" (click)="showModalOrcamento()">
+        Novo
+      </button>
     </div>
-  </div>
-  <div class="col-3 mb-3">
-    <button class="btn btn-sm btn-secondary" (click)="showModalOrcamento()">
-      Novo
-    </button>
-  </div>
-  <section>
-    <table class="table table-hover table-striped table-sm">
+    <!-- <table class="table table-hover table-striped table-sm">
       <thead>
         <tr>
           <th class="col-1">Status</th>
+          <th class="col-1">Aberto</th>
+          <th class="col-1">Últ Atualiz</th>
           <th class="col">Nome</th>
           <th class="col-1">Telefone</th>
           <th class="col-1">Modelo</th>
@@ -42,6 +109,8 @@
       <tbody *ngIf="orcamentos$ | async as orcamentos">
         <tr *ngFor="let orcamento of orcamentos">
           <td>{{ statusOrcamento(orcamento.status) }}</td>
+          <td>{{ orcamento.createdAt | date : "dd/MM/yyyy" }}</td>
+          <td>{{ orcamento.updatedAt | date : "dd/MM/yyyy" }}</td>
           <td>{{ orcamento.cliente.nomeRazaoSocial | titlecase }}</td>
           <td>{{ orcamento.cliente.telefone }}</td>
           <td>{{ orcamento.veiculo.modelo | titlecase }}</td>
@@ -57,6 +126,43 @@
             <button>Excluir</button>
           </td>
         </tr>
+      </tbody>
+    </table> -->
+
+    <table
+      class="table table-sm"
+      datatable
+      [dtOptions]="dtOptions"
+      [dtTrigger]="dtTrigger"
+      id="orcamentosTable"
+    >
+      <thead>
+        <tr>
+          <th>Status</th>
+          <th>Aberto</th>
+          <th>Últ Atualiz</th>
+          <th>Nome</th>
+          <th>Modelo</th>
+          <th>Placa</th>
+          <th>Chassi</th>
+          <th>Vendedor</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for(orcamento of listaOrcamentos; track orcamento){
+        <tr>
+          <td>{{ statusOrcamento(orcamento.status) | titlecase }}</td>
+          <td>{{ orcamento.createdAt | date : "dd/MM/yyyy" }}</td>
+          <td>{{ orcamento.updatedAt | date : "dd/MM/yyyy" || "" }}</td>
+          <td>{{ orcamento.cliente.nomeRazaoSocial | titlecase }}</td>
+          <td>{{ orcamento.veiculo.modelo | titlecase }}</td>
+          <td>{{ orcamento.veiculo.placa | uppercase }}</td>
+          <td>{{ orcamento.veiculo.chassi | uppercase }}</td>
+          <td></td>
+          <td></td>
+        </tr>
+        }
       </tbody>
     </table>
   </section>

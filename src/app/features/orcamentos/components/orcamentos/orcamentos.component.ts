@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { OrcamentoService } from '../../services/orcamento.service';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Orcamento } from '../../../../interfaces/orcamento/orcamento';
 import { MessageService } from '../../../../shared/services/message/message.service';
 import { ModalOrcamentoComponent } from '../modal-orcamento/modal-orcamento.component';
@@ -8,7 +8,14 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Status } from '../../../../interfaces/status';
 import { HttpClient } from '@angular/common/http';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { DataTablesModule } from 'angular-datatables';
+import { Config } from 'datatables.net';
 
 @Component({
   selector: 'app-orcamentos',
@@ -18,6 +25,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
     ModalOrcamentoComponent,
     CommonModule,
     RouterLink,
+    DataTablesModule,
   ],
   templateUrl: './orcamentos.component.html',
   styleUrl: './orcamentos.component.css',
@@ -27,6 +35,17 @@ export class OrcamentosComponent {
   isModalOrcamento = false;
   orcamentoId: string = '';
   statusList: Status[] = [];
+  listaOrcamentos: Orcamento[] = [];
+  dtOptions: Config = {};
+  dtTrigger: Subject<any> = new Subject();
+
+  filtrosForm = new FormGroup({
+    status: new FormControl(''),
+    search: new FormControl(''),
+    startDate: new FormControl(''),
+    endDate: new FormControl(''),
+    sort: new FormControl(''),
+  });
 
   constructor(
     private orcamentoService: OrcamentoService,
@@ -36,24 +55,49 @@ export class OrcamentosComponent {
 
   ngOnInit() {
     this.carregarListaStatus();
-    this.getAllOrcamentos().subscribe({
-      next: (orcamentos: Orcamento[]) => {},
-      error: (error) => {
-        this.message.error(error.error.errors[0]);
-      },
-    });
+    this.loadOrcamentos();
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 25,
+    };
   }
 
-  getAllOrcamentos(status?: number): Observable<Orcamento[]> {
-    return (this.orcamentos$ = this.orcamentoService.getAll(
-      status?.toString()
-    ));
+  ngafterViewInit() {
+    this.dtTrigger.next(null);
   }
 
-  onStatusChange(event: Event): void {
-    const selectElement = event.target as HTMLSelectElement;
-    const status = Number(selectElement.value);
-    this.getAllOrcamentos(status);
+  ngOnDestroy(): void {
+    this.dtTrigger.unsubscribe();
+  }
+
+  submit() {
+    const search = this.filtrosForm.get('search')?.value || '';
+    const status = this.filtrosForm.get('status')?.value || '';
+    const startDate = this.convertDate(
+      this.filtrosForm.get('startDate')?.value || ''
+    );
+    const endDate = this.convertDate(
+      this.filtrosForm.get('endDate')?.value || ''
+    );
+    const sort = this.filtrosForm.get('sort')?.value || '';
+    this.loadOrcamentos(search, status, 1, 10, startDate, endDate, sort);
+  }
+
+  loadOrcamentos(
+    search: string = '',
+    status: string = '',
+    pageNumber: number = 1,
+    pageSize: number = 25,
+    startDate: Date | string = '',
+    endDate: Date | string = '',
+    sort: string | string = ''
+  ) {
+    this.orcamentoService
+      .getAll(search, status, pageNumber, pageSize, startDate, endDate, sort)
+      .subscribe((orcamentos) => {
+        this.listaOrcamentos = orcamentos;
+        this.dtTrigger.next(null);
+      });
   }
 
   editOrcamento(orcamentoId: string) {
@@ -74,6 +118,12 @@ export class OrcamentosComponent {
       .subscribe((status) => {
         this.statusList = status;
       });
+  }
+
+  convertDate(date: string): string {
+    if (!date) return '';
+    const dateObj = new Date(date);
+    return dateObj.toISOString().split('T')[0] + 'T00:00:00.000Z';
   }
 
   statusOrcamento(status: number): string {
