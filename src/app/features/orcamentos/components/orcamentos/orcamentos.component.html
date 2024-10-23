@@ -129,13 +129,7 @@
       </tbody>
     </table> -->
 
-    <table
-      class="table table-sm"
-      datatable
-      [dtOptions]="dtOptions"
-      [dtTrigger]="dtTrigger"
-      id="orcamentosTable"
-    >
+    <table class="table table-sm">
       <thead>
         <tr>
           <th>Status</th>
@@ -150,20 +144,42 @@
         </tr>
       </thead>
       <tbody>
-        @for(orcamento of listaOrcamentos; track orcamento){
-        <tr>
-          <td>{{ statusOrcamento(orcamento.status) | titlecase }}</td>
+        <tr
+          *ngFor="
+            let orcamento of listaOrcamentos
+              | paginate
+                : {
+                    itemsPerPage: itemsPerPage,
+                    currentPage: p,
+                    totalItems: total
+                  }
+          "
+        >
+          <td>{{ statusOrcamento(orcamento.status) }}</td>
           <td>{{ orcamento.createdAt | date : "dd/MM/yyyy" }}</td>
-          <td>{{ orcamento.updatedAt | date : "dd/MM/yyyy" || "" }}</td>
+          <td>{{ orcamento.updatedAt | date : "dd/MM/yyyy" }}</td>
           <td>{{ orcamento.cliente.nomeRazaoSocial | titlecase }}</td>
           <td>{{ orcamento.veiculo.modelo | titlecase }}</td>
           <td>{{ orcamento.veiculo.placa | uppercase }}</td>
           <td>{{ orcamento.veiculo.chassi | uppercase }}</td>
-          <td></td>
-          <td></td>
+          <td>{{ orcamento.vendedor | titlecase }}</td>
+          <td class="d-flex gap-2">
+            <a
+              class="btn btn-sm btn-secondary"
+              routerLink="/orcamento/{{ orcamento.id }}"
+              >Editar</a
+            >
+            <button>Excluir</button>
+          </td>
         </tr>
-        }
       </tbody>
     </table>
+    <pagination-controls
+      class="myPagination"
+      previousLabel="**"
+      nextLabel="##"
+      (pageChange)="p = $event"
+    >
+    </pagination-controls>
   </section>
 </div>

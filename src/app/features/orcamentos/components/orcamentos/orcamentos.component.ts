@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { OrcamentoService } from '../../services/orcamento.service';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Orcamento } from '../../../../interfaces/orcamento/orcamento';
 import { MessageService } from '../../../../shared/services/message/message.service';
 import { ModalOrcamentoComponent } from '../modal-orcamento/modal-orcamento.component';
@@ -8,14 +8,8 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Status } from '../../../../interfaces/status';
 import { HttpClient } from '@angular/common/http';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import { DataTablesModule } from 'angular-datatables';
-import { Config } from 'datatables.net';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
   selector: 'app-orcamentos',
@@ -25,7 +19,7 @@ import { Config } from 'datatables.net';
     ModalOrcamentoComponent,
     CommonModule,
     RouterLink,
-    DataTablesModule,
+    NgxPaginationModule,
   ],
   templateUrl: './orcamentos.component.html',
   styleUrl: './orcamentos.component.css',
@@ -36,8 +30,6 @@ export class OrcamentosComponent {
   orcamentoId: string = '';
   statusList: Status[] = [];
   listaOrcamentos: Orcamento[] = [];
-  dtOptions: Config = {};
-  dtTrigger: Subject<any> = new Subject();
 
   filtrosForm = new FormGroup({
     status: new FormControl(''),
@@ -46,6 +38,10 @@ export class OrcamentosComponent {
     endDate: new FormControl(''),
     sort: new FormControl(''),
   });
+
+  p: number = 1; // Página atual
+  total: number = 0; // Total de itens
+  itemsPerPage: number = 10;
 
   constructor(
     private orcamentoService: OrcamentoService,
@@ -56,18 +52,6 @@ export class OrcamentosComponent {
   ngOnInit() {
     this.carregarListaStatus();
     this.loadOrcamentos();
-    this.dtOptions = {
-      pagingType: 'full_numbers',
-      pageLength: 25,
-    };
-  }
-
-  ngafterViewInit() {
-    this.dtTrigger.next(null);
-  }
-
-  ngOnDestroy(): void {
-    this.dtTrigger.unsubscribe();
   }
 
   submit() {
@@ -96,7 +80,7 @@ export class OrcamentosComponent {
       .getAll(search, status, pageNumber, pageSize, startDate, endDate, sort)
       .subscribe((orcamentos) => {
         this.listaOrcamentos = orcamentos;
-        this.dtTrigger.next(null);
+        this.total = orcamentos.length;
       });
   }
 
