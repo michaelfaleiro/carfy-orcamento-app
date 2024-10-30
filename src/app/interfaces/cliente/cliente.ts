@@ -1,3 +1,4 @@
+import { OrcamentoMinimum } from '../orcamento/orcamentoMinimum';
 import { Veiculo } from '../veiculo/veiculo';
 
 export interface Cliente {
@@ -11,4 +12,5 @@ export interface Cliente {
   eTipoPessoa: number;
   observacao: string;
   veiculos?: Veiculo[];
+  orcamentos?: OrcamentoMinimum[];
 }

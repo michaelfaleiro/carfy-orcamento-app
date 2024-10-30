@@ -8,34 +8,44 @@ import { map, Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class VeiculoService {
-  private url = `${environment.apiUrl}/veiculos`;
+  private apiUrl = `${environment.apiUrl}/veiculos`;
   constructor(private http: HttpClient) {}
 
   create(veiculo: Veiculo): Observable<Veiculo> {
     return this.http
-      .post<{ data: Veiculo; errors: string[] }>(this.url, veiculo)
+      .post<{ data: Veiculo; errors: string[] }>(this.apiUrl, veiculo)
       .pipe(map((response) => response.data));
   }
 
   update(veiculo: Veiculo): Observable<void> {
-    return this.http.put<void>(`${this.url}/${veiculo.id}`, veiculo);
+    return this.http.put<void>(`${this.apiUrl}/${veiculo.id}`, veiculo);
   }
 
   delete(id: string): Observable<Veiculo> {
     return this.http
-      .delete<{ data: Veiculo; errors: string[] }>(`${this.url}/${id}`)
+      .delete<{ data: Veiculo; errors: string[] }>(`${this.apiUrl}/${id}`)
       .pipe(map((response) => response.data));
   }
 
-  getAll(): Observable<Veiculo[]> {
+  getAll(
+    search: string = '',
+    status: string = '',
+    pageNumber: number = 1,
+    pageSize: number = 25,
+    startDate: Date | string = '',
+    endDate: Date | string = '',
+    sort: string | string = ''
+  ): Observable<Veiculo[]> {
     return this.http
-      .get<{ data: Veiculo[]; errors: string[] }>(this.url)
+      .get<{ data: Veiculo[]; errors: string[] }>(
+        `${this.apiUrl}?pageNumber=${pageNumber}&pageSize=${pageSize}&status=${status}&sort=${sort}&startDate=${startDate}&endDate=${endDate}&search=${search}`
+      )
       .pipe(map((response) => response.data));
   }
 
   getById(id: string): Observable<Veiculo> {
     return this.http
-      .get<{ data: Veiculo; errors: string[] }>(`${this.url}/${id}`)
+      .get<{ data: Veiculo; errors: string[] }>(`${this.apiUrl}/${id}`)
       .pipe(map((response) => response.data));
   }
 }

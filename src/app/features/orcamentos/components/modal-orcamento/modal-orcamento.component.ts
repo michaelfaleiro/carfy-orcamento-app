@@ -34,6 +34,7 @@ import { Veiculo } from '../../../../interfaces/veiculo/veiculo';
 export class ModalOrcamentoComponent {
   clientes$ = new Observable<Cliente[]>();
   clienteSearch = new FormControl();
+  vendedor = new FormControl();
 
   @Input() orcamentoId: string = '';
   @Output() close = new EventEmitter();
@@ -72,9 +73,11 @@ export class ModalOrcamentoComponent {
     const orcamento: RegisterOrcamentoRequest = {
       clienteId: veiculo.clienteId,
       veiculoId: veiculo.id!,
-      vendedor: 'Michael',
+      vendedor: this.vendedor.value || '',
       status: 1,
     };
+    console.log(orcamento);
+
     this.orcamentoService.create(orcamento).subscribe({
       next: (orcamento) => {
         this.message.success('Orçamento criado com sucesso!');

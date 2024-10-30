@@ -1,5 +1,5 @@
 <div class="modal" style="display: block">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">
@@ -20,8 +20,8 @@
           (keydown.enter)="$event.preventDefault()"
         >
           <div>
-            <div class="d-flex justify-content-between gap-2">
-              <div class="col-2">
+            <div class="d-flex justify-content-between gap-2 mb-3">
+              <div class="col-4">
                 <label for="placa" class="form-label">Placa</label>
                 <input
                   type="text"
@@ -40,7 +40,9 @@
                   formControlName="chassi"
                 />
               </div>
+            </div>
 
+            <div class="d-flex gap-2 justify-content-between mb-3">
               <div class="col">
                 <label for="marca" class="form-label">Marca</label>
                 <select class="form-control" id="marca" formControlName="marca">
@@ -50,7 +52,19 @@
                 </select>
               </div>
 
-              <div class="col-2">
+              <div class="col">
+                <label for="modelo" class="form-label">Modelo</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="modelo"
+                  formControlName="modelo"
+                />
+              </div>
+            </div>
+
+            <div class="d-flex gap-2 justify-content-between mb-3">
+              <div class="col">
                 <label for="ano" class="form-label">Ano</label>
                 <input
                   type="text"
@@ -59,26 +73,16 @@
                   formControlName="ano"
                 />
               </div>
-            </div>
 
-            <div class="mb-3">
-              <label for="modelo" class="form-label">Modelo</label>
-              <input
-                type="text"
-                class="form-control"
-                id="modelo"
-                formControlName="modelo"
-              />
-            </div>
-
-            <div class="mb-3">
-              <label for="cor" class="form-label">Cor</label>
-              <input
-                type="text"
-                class="form-control"
-                id="cor"
-                formControlName="cor"
-              />
+              <div class="col">
+                <label for="cor" class="form-label">Cor</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="cor"
+                  formControlName="cor"
+                />
+              </div>
             </div>
 
             <div class="mb-3">

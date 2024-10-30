@@ -1,27 +1,137 @@
 <div class="container h-100 d-flex flex-column">
-  <div>
-    <h6>Cotações</h6>
-  </div>
-  <div>
-    <table class="table table-sm table-striped table-hover">
-      <thead>
-        <tr>
-          <th scope="col">Status</th>
-          <th scope="col">Aberta em</th>
-          <th scope="col">Última Atualização</th>
-          <th scope="col">Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let cotacao of cotacoes$ | async">
-          <td>{{ statusCotacao(cotacao.status) }}</td>
-          <td>{{ cotacao.createdAt | date : "dd/MM/yyyy HH:mm" }}</td>
-          <td>{{ cotacao.updatedAt | date : "dd/MM/yyyy HH:mm" }}</td>
-          <td>
-            <a [routerLink]="['/cotacao', cotacao.id]">Visualizar</a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="d-flex flex-column gap-2 flex-grow-1">
+    <div class="bg-secondary-subtle rounded-2 shadow p-2">
+      <h6 class="text-center">Cotações</h6>
+      <form [formGroup]="filtrosForm" (ngSubmit)="submit()">
+        <div class="row d-flex">
+          <div class="col-3">
+            <label class="form-label col-form-label-sm" for="search"
+              >Buscar</label
+            >
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              formControlName="search"
+              placeholder="Buscar por Sku"
+            />
+          </div>
+          <div class="col-3">
+            <label class="form-label col-form-label-sm" for="startDate"
+              >Data Inicial</label
+            >
+            <input
+              type="date"
+              class="form-control form-control-sm"
+              formControlName="startDate"
+            />
+          </div>
+          <div class="col-3">
+            <label class="form-label col-form-label-sm" for="endDate"
+              >Data Final</label
+            >
+            <input
+              type="date"
+              class="form-control form-control-sm"
+              formControlName="endDate"
+            />
+          </div>
+          <div class="col-3">
+            <label class="form-label col-form-label-sm" for="status"
+              >Status</label
+            >
+            <select class="form-select form-select-sm" formControlName="status">
+              <option value="">Todos</option>
+              <option *ngFor="let status of statusList" [value]="status.status">
+                {{ status.descricao }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="row d-flex">
+          <div class="col-3 mb-3">
+            <label class="form-label col-form-label-sm" for="vendedor"
+              >Vendedor</label
+            >
+            <select
+              class="form-select form-select-sm"
+              formControlName="vendedor"
+            >
+              <option value="">Todos</option>
+              <option value="michael">Michael</option>
+              <option value="welligton">Welligton</option>
+              <option value="nicollas">Nicollas</option>
+            </select>
+          </div>
+          <div class="col-3">
+            <label for="sort" class="form-label col-form-label-sm"
+              >Ordenar por</label
+            >
+            <select class="form-select form-select-sm" formControlName="sort">
+              <option value="CreatedAt">Data de Abertura</option>
+              <option value="CreatedAtDesc">Data de Abertura Descedente</option>
+              <option value="UpdatedAt">Data de Atualização</option>
+              <option value="UpdatedAtDesc">
+                Data de Atualização Descedente
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-3 mb-3 d-flex gap-2">
+            <button
+              (click)="limparFiltros()"
+              type="button"
+              class="btn btn-sm btn-danger"
+            >
+              Limpar
+            </button>
+            <button class="btn btn-sm btn-secondary" type="submit">
+              Filtrar
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="bg-secondary-subtle shadow rounded-2 p-2 flex-grow-1">
+      <table class="table table-sm table-striped table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Status</th>
+            <th scope="col">Aberta em</th>
+            <th scope="col">Última Atualização</th>
+            <th scope="col">Ações</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="cotacoes$ | async as cotacoes">
+          <tr
+            *ngFor="let cotacao of cotacoes  | paginate :
+        {
+          itemsPerPage: itemsPerPage,
+          currentPage: p,
+          totalItems: total,
+        }
+        "
+          >
+            <td>{{ statusCotacao(cotacao.status) }}</td>
+            <td>{{ cotacao.createdAt | date : "dd/MM/yyyy HH:mm" }}</td>
+            <td>{{ cotacao.updatedAt | date : "dd/MM/yyyy HH:mm" }}</td>
+            <td>
+              <a
+                class="btn btn-sm btn-secondary"
+                [routerLink]="['/cotacao', cotacao.id]"
+                >Visualizar</a
+              >
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <pagination-controls
+        class="myPagination"
+        previousLabel=""
+        nextLabel=""
+        (pageChange)="p = $event"
+      >
+      </pagination-controls>
+    </div>
   </div>
 </div>

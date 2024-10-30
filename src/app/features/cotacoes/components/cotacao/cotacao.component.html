@@ -24,25 +24,37 @@
     <div class="col-3">
       <div class="fake-input-container">
         <label>Modelo:</label>
-        <div class="fake-input">Corsa</div>
+        <div class="fake-input">
+          {{ (cotacao$ | async)?.veiculo?.modelo | titlecase }}
+        </div>
       </div>
       <div class="fake-input-container">
         <label>Placa:</label>
-        <div class="fake-input">MFX8H17</div>
+        <div class="fake-input">
+          {{
+            (cotacao$ | async)?.veiculo?.placa || "Não Informado" | uppercase
+          }}
+        </div>
       </div>
       <div class="fake-input-container">
         <label>Chassi:</label>
-        <div class="fake-input">KNMHJJK1234567890</div>
+        <div class="fake-input">
+          {{
+            (cotacao$ | async)?.veiculo?.chassi || "Não Informado" | uppercase
+          }}
+        </div>
       </div>
     </div>
     <div class="col-3">
       <div class="fake-input-container">
         <label>Ano:</label>
-        <div class="fake-input">2009</div>
+        <div class="fake-input">{{ (cotacao$ | async)?.veiculo?.ano }}</div>
       </div>
       <div class="fake-input-container">
         <label>Motor:</label>
-        <div class="fake-input">2.0 16v</div>
+        <div class="fake-input">
+          {{ (cotacao$ | async)?.veiculo?.motor | uppercase }}
+        </div>
       </div>
     </div>
     <div>
@@ -79,10 +91,10 @@
 
   <section class="bg-secondary-subtle p-2 rounded-2 border-1 h-100">
     <div class="col mb-2 d-flex gap-1">
-      <button class="btn btn-sm btn-secondary">
+      <a routerLink="/cotacoes" class="btn btn-sm btn-secondary">
         <i class="fas fa-arrow-left"></i>
         Voltar
-      </button>
+      </a>
       <button (click)="novoItem()" class="btn btn-sm btn-secondary">
         Novo Item
       </button>
@@ -130,9 +142,6 @@
                 >
                   <i class="fa-solid fa-barcode"></i>
                 </button>
-                <button class="btn btn-sm btn-danger" title="Excluir Item">
-                  <i class="fa-solid fa-trash"></i>
-                </button>
               </td>
             </tr>
           </tbody>
@@ -148,9 +157,7 @@
               <th>Fabricante</th>
               <th>Fornecedor</th>
               <th>Prazo</th>
-              <th>DropShip</th>
               <th>Custo</th>
-              <th>Frete</th>
               <th>Venda</th>
               <td>Ações</td>
             </tr>
@@ -162,9 +169,7 @@
               <td>{{ preco.fabricante | titlecase }}</td>
               <td>{{ preco.fornecedor | titlecase }}</td>
               <td>{{ preco.prazoExpedicao }}</td>
-              <td></td>
               <td>{{ preco.valorCusto | currency }}</td>
-              <td></td>
               <td>{{ preco.valorVenda | currency }}</td>
               <td class="d-flex gap-2">
                 <button

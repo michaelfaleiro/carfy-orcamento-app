@@ -13,6 +13,14 @@
       </div>
       <div class="modal-body">
         <form class="p-2">
+          <div>
+            <label for="vendedor" class="form-label">Vendedor</label>
+            <select name="vendedor" id="vendedor" [formControl]="vendedor">
+              <option value="Michael">Michael</option>
+              <option value="Welligton">Welligton</option>
+              <option value="Nicollas">Nicollas</option>
+            </select>
+          </div>
           <div class="form-floating mb-3">
             <input
               type="text"

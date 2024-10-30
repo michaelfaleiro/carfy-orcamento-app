@@ -66,20 +66,12 @@
           {{ orcamento.veiculo.cor || "Não Informado" | titlecase }}
         </div>
       </div>
-      <form [formGroup]="statusForm">
-        <div class="fake-input-container">
-          <label>Status:</label>
-          <select
-            class="form-select"
-            formControlName="status"
-            (change)="alterarStatus()"
-          >
-            <option *ngFor="let status of statusList" [value]="status.status">
-              {{ status.descricao }}
-            </option>
-          </select>
+      <div class="fake-input-container">
+        <label>Vendedor:</label>
+        <div class="fake-input">
+          {{ orcamento.vendedor || "Não Informado" | titlecase }}
         </div>
-      </form>
+      </div>
     </div>
     <div class="col">
       <div class="fake-input-container">
@@ -94,12 +86,21 @@
           {{ orcamento.updatedAt | date : "dd/MM/yyyy HH:mm" }}
         </div>
       </div>
-      <div class="fake-input-container">
-        <label>Vendedor:</label>
-        <div class="fake-input">
-          {{ orcamento.vendedor || "Não Informado" | titlecase }}
+
+      <form [formGroup]="statusForm">
+        <div class="fake-input-container">
+          <label>Status:</label>
+          <select
+            class="form-select form-select-sm"
+            formControlName="status"
+            (change)="alterarStatus()"
+          >
+            <option *ngFor="let status of statusList" [value]="status.status">
+              {{ status.descricao }}
+            </option>
+          </select>
         </div>
-      </div>
+      </form>
     </div>
   </section>
   <!-- Inicio Botões  -->
@@ -126,7 +127,7 @@
   } @else {
   <!-- Inicio Produtos -->
   <section class="bg-body-secondary p-2 border-1 rounded-2 produtos-section">
-    <table class="table table-sm table-hover table-striped">
+    <table class="table table-secondary table-sm table-hover table-striped">
       <thead>
         <tr>
           <th>Quant</th>

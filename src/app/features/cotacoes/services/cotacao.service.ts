@@ -17,9 +17,20 @@ export class CotacaoService {
 
   constructor(private http: HttpClient) {}
 
-  getCotacoes(): Observable<Cotacao[]> {
+  getCotacoes(
+    search: string = '',
+    vendedor: string = '',
+    status: string = '',
+    pageNumber: number = 1,
+    pageSize: number = 25,
+    startDate: Date | string = '',
+    endDate: Date | string = '',
+    sort: string | string = ''
+  ): Observable<Cotacao[]> {
     return this.http
-      .get<{ data: Cotacao[]; errors: string[] }>(this.apiUrl)
+      .get<{ data: Cotacao[]; errors: string[] }>(
+        `${this.apiUrl}?pageNumber=${pageNumber}&pageSize=${pageSize}&status=${status}&sort=${sort}&startDate=${startDate}&endDate=${endDate}&search=${search}&vendedor=${vendedor}`
+      )
       .pipe(map((response) => response.data));
   }
 

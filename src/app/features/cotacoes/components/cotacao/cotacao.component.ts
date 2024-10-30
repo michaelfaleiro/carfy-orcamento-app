@@ -3,7 +3,7 @@ import { CotacaoService } from '../../services/cotacao.service';
 import { MessageService } from '../../../../shared/services/message/message.service';
 import { Observable } from 'rxjs';
 import { Cotacao } from '../../../../interfaces/cotacao/cotacao';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ModalItemCotacaoComponent } from '../../../orcamentos/components/orcamento-cotacao/modal-item-cotacao/modal-item-cotacao.component';
 import { ItemCotacao } from '../../../../interfaces/cotacao/itemCotacao';
@@ -23,6 +23,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
     ModalItemCotacaoComponent,
     ModalCodigoEquivalenteComponent,
     ModalPrecoFornecedorComponent,
+    RouterLink,
   ],
   templateUrl: './cotacao.component.html',
   styleUrl: './cotacao.component.css',
@@ -97,8 +98,16 @@ export class CotacaoComponent {
     this.showModalItemCotacao();
   }
 
+  novoPrecoFornecedor(item: ItemCotacao) {
+    this.precoItem = {} as PrecoItem;
+    this.item = item;
+    this.itemDescricao = item.descricao;
+    this.isModalPrecoFornecedor = true;
+  }
+
   editarPrecoItem(precoItem: PrecoItem) {
     this.precoItem = precoItem;
+
     this.showModalPrecoFornecedor(this.item);
   }
 
@@ -143,12 +152,9 @@ export class CotacaoComponent {
   showModalCodigoEquivalente(itemId: string) {
     this.itemId = itemId;
     this.isModalCodigoEquivalente = !this.isModalCodigoEquivalente;
-  }
-
-  novoPrecoFornecedor(item: ItemCotacao) {
-    this.precoItem = {} as PrecoItem;
-    this.itemDescricao = item.descricao;
-    this.isModalPrecoFornecedor = true;
+    if (!this.isModalCodigoEquivalente) {
+      this.itemId = '';
+    }
   }
 
   showModalPrecoFornecedor(item: ItemCotacao) {

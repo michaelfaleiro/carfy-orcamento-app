@@ -8,6 +8,7 @@ export interface PrecoItem {
   fabricante: string;
   quantidade: number;
   sku: string;
+  descricao: string;
   valorCusto: number;
   valorVenda: number;
   prazoExpedicao: number;

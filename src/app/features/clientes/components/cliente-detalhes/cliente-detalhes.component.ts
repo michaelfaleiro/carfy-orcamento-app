@@ -4,19 +4,21 @@ import { Cliente } from '../../../../interfaces/cliente/cliente';
 import { ClienteService } from '../../services/cliente.service';
 import { CommonModule } from '@angular/common';
 import { NgxMaskPipe } from 'ngx-mask';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MessageService } from '../../../../shared/services/message/message.service';
 import { ModalVeiculoComponent } from '../../../veiculos/components/modal-veiculo/modal-veiculo.component';
+import { Veiculo } from '../../../../interfaces/veiculo/veiculo';
 
 @Component({
   selector: 'app-cliente-detalhes',
   standalone: true,
-  imports: [CommonModule, NgxMaskPipe, ModalVeiculoComponent],
+  imports: [CommonModule, NgxMaskPipe, ModalVeiculoComponent, RouterLink],
   templateUrl: './cliente-detalhes.component.html',
   styleUrl: './cliente-detalhes.component.css',
 })
 export class ClienteDetalhesComponent {
   clienteId = '';
+  veiculoId = '';
   cliente$ = new Observable<Cliente>();
   isModalVeiculo = false;
 
@@ -37,6 +39,12 @@ export class ClienteDetalhesComponent {
 
   getCliente(id: string) {
     this.cliente$ = this.clienteService.getById(id);
+  }
+
+  editarVeiculo(veiculo: Veiculo) {
+    this.clienteId = veiculo.clienteId;
+    this.veiculoId = veiculo.id!;
+    this.showModalVeiculo();
   }
 
   showModalVeiculo() {

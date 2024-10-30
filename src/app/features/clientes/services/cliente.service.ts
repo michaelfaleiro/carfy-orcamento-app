@@ -15,7 +15,6 @@ export class ClienteService {
     if (!query) {
       return of([]);
     }
-    console.log(query);
 
     return this.http
       .get<{ data: Cliente[]; errors: string[] }>(
@@ -24,9 +23,19 @@ export class ClienteService {
       .pipe(map((response) => response.data));
   }
 
-  getAll(): Observable<Cliente[]> {
+  getAll(
+    search: string = '',
+    status: string = '',
+    pageNumber: number = 1,
+    pageSize: number = 25,
+    startDate: Date | string = '',
+    endDate: Date | string = '',
+    sort: string | string = ''
+  ): Observable<Cliente[]> {
     return this.http
-      .get<{ data: Cliente[]; errors: string[] }>(this.url)
+      .get<{ data: Cliente[]; errors: string[] }>(
+        `${this.url}?pageNumber=${pageNumber}&pageSize=${pageSize}&status=${status}&sort=${sort}&startDate=${startDate}&endDate=${endDate}&search=${search}`
+      )
       .pipe(map((response) => response.data));
   }
 

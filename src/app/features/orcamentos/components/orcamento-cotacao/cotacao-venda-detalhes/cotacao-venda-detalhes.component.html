@@ -116,8 +116,12 @@
             <td>{{ preco.prazoExpedicao }}</td>
             <td>{{ preco.valorVenda | currency }}</td>
             <td>
-              <button class="btn btn-sm btn-primary">
-                <i class="fas fa-edit"></i>
+              <button
+                (click)="adicionarItemAvulsoOrcamento(preco)"
+                class="btn btn-sm btn-primary"
+                title="Adicionar ao Orçamento"
+              >
+                <i class="fa-solid fa-cart-plus"></i>
               </button>
             </td>
           </tr>

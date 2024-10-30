@@ -34,6 +34,7 @@ export class OrcamentosComponent {
   filtrosForm = new FormGroup({
     status: new FormControl(''),
     search: new FormControl(''),
+    vendedor: new FormControl(''),
     startDate: new FormControl(''),
     endDate: new FormControl(''),
     sort: new FormControl(''),
@@ -64,11 +65,22 @@ export class OrcamentosComponent {
       this.filtrosForm.get('endDate')?.value || ''
     );
     const sort = this.filtrosForm.get('sort')?.value || '';
-    this.loadOrcamentos(search, status, 1, 10, startDate, endDate, sort);
+    const vendedor = this.filtrosForm.get('vendedor')?.value || '';
+    this.loadOrcamentos(
+      search,
+      vendedor,
+      status,
+      1,
+      10,
+      startDate,
+      endDate,
+      sort
+    );
   }
 
   loadOrcamentos(
     search: string = '',
+    vendedor: string = '',
     status: string = '',
     pageNumber: number = 1,
     pageSize: number = 25,
@@ -77,7 +89,16 @@ export class OrcamentosComponent {
     sort: string | string = ''
   ) {
     this.orcamentoService
-      .getAll(search, status, pageNumber, pageSize, startDate, endDate, sort)
+      .getAll(
+        search,
+        vendedor,
+        status,
+        pageNumber,
+        pageSize,
+        startDate,
+        endDate,
+        sort
+      )
       .subscribe((orcamentos) => {
         this.listaOrcamentos = orcamentos;
         this.total = orcamentos.length;
@@ -102,6 +123,12 @@ export class OrcamentosComponent {
       .subscribe((status) => {
         this.statusList = status;
       });
+  }
+
+  limparFiltros() {
+    this.filtrosForm.reset();
+    this.filtrosForm.get('status')?.setValue('');
+    this.submit();
   }
 
   convertDate(date: string): string {

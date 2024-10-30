@@ -1,56 +1,157 @@
-<div class="container-fluid h-100 d-flex flex-column">
-  @if(isModalCliente){
-  <app-modal-cliente
-    (close)="showModalCliente()"
-    (updateCliente)="getAllClientes()"
-    [clienteId]="clienteId"
-  />
-  }
-  <div>
+@if(isModalCliente){
+<app-modal-cliente
+  (close)="showModalCliente()"
+  (updateCliente)="getAllClientes()"
+  [clienteId]="clienteId"
+/>
+}
+
+<div class="container h-100 d-flex flex-column gap-2">
+  <div class="bg-secondary-subtle shadow rounded-2 p-2">
     <h6 class="text-center">Clientes</h6>
+    <form [formGroup]="filtrosForm" (ngSubmit)="submit()">
+      <div class="row d-flex">
+        <div class="col-3">
+          <label class="form-label col-form-label-sm" for="search"
+            >Buscar</label
+          >
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            formControlName="search"
+            placeholder="Buscar por Nome, Telefone, Placa, Chassi"
+          />
+        </div>
+        <div class="col-3">
+          <label class="form-label col-form-label-sm" for="startDate"
+            >Data Inicial</label
+          >
+          <input
+            type="date"
+            class="form-control form-control-sm"
+            formControlName="startDate"
+          />
+        </div>
+        <div class="col-3">
+          <label class="form-label col-form-label-sm" for="endDate"
+            >Data Final</label
+          >
+          <input
+            type="date"
+            class="form-control form-control-sm"
+            formControlName="endDate"
+          />
+        </div>
+        <div class="col-3">
+          <label class="form-label col-form-label-sm" for="status"
+            >Status</label
+          >
+          <select class="form-select form-select-sm" formControlName="status">
+            <option value="">Todos</option>
+            <option *ngFor="let status of statusList" [value]="status.status">
+              {{ status.descricao }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="row d-flex">
+        <div class="col-3 mb-3">
+          <label class="form-label col-form-label-sm" for="vendedor"
+            >Vendedor</label
+          >
+          <select class="form-select form-select-sm" formControlName="vendedor">
+            <option value="">Todos</option>
+            <option value="michael">Michael</option>
+            <option value="welligton">Welligton</option>
+            <option value="nicollas">Nicollas</option>
+          </select>
+        </div>
+        <div class="col-3">
+          <label for="sort" class="form-label col-form-label-sm"
+            >Ordenar por</label
+          >
+          <select class="form-select form-select-sm" formControlName="sort">
+            <option value="CreatedAt">Data de Abertura</option>
+            <option value="CreatedAtDesc">Data de Abertura Descedente</option>
+            <option value="UpdatedAt">Data de Atualização</option>
+            <option value="UpdatedAtDesc">
+              Data de Atualização Descedente
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3 mb-3 d-flex gap-2">
+          <button
+            (click)="limparFiltros()"
+            type="button"
+            class="btn btn-sm btn-danger"
+          >
+            Limpar
+          </button>
+          <button class="btn btn-sm btn-secondary" type="submit">
+            Filtrar
+          </button>
+        </div>
+      </div>
+    </form>
   </div>
-  <section class="d-flex h-100 flex-column">
-    <div>
-      <p>Filtros</p>
-      <button (click)="showModalCliente()" class="btn btn-sm btn-secondary">
-        Novo
-      </button>
-    </div>
-    <div class="flex-grow-1">
-      <table class="table table-striped table-hover">
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Telefone</th>
-            <th>Email</th>
-            <th>Tipo Pessoa</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody *ngIf="clientes$ | async as clientes">
-          <tr *ngFor="let cliente of clientes">
-            <td>{{ cliente.nomeRazaoSocial | titlecase }}</td>
-            <td>{{ cliente.telefone }}</td>
-            <td>{{ cliente.email || "Email não informado" | lowercase }}</td>
-            <td>{{ cliente.eTipoPessoa }}</td>
-            <td class="d-flex gap-2">
-              <button
-                class="btn btn-sm btn-primary"
-                (click)="editCliente(cliente.id!)"
-              >
-                Editar
-              </button>
-              <a
-                routerLink="/cliente/{{ cliente.id }}"
-                class="btn btn-sm btn-secondary"
-                title="Detalhes"
-              >
-                <i class="fa-solid fa-car"></i>
-              </a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+  <div class="flex-grow-1 bg-secondary-subtle rounded-2 shadow p-2">
+    <button (click)="showModalCliente()" class="btn btn-sm btn-secondary mb-3">
+      Novo
+    </button>
+
+    <table class="table table-sm table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Telefone</th>
+          <th>Email</th>
+          <th>Tipo Pessoa</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody *ngIf="clientes$ | async as clientes">
+        <tr
+          *ngFor="
+            let cliente of clientes
+              | paginate
+                : {
+                    itemsPerPage: itemsPerPage,
+                    currentPage: p,
+                    totalItems: total
+                  }
+          "
+        >
+          <td>{{ cliente.nomeRazaoSocial | titlecase }}</td>
+          <td>{{ cliente.telefone | mask : "(99)9 9999-9999" }}</td>
+          <td>{{ cliente.email || "Email não informado" | lowercase }}</td>
+          <td>{{ cliente.eTipoPessoa }}</td>
+          <td class="d-flex gap-2">
+            <button
+              class="btn btn-sm btn-primary"
+              title="Editar"
+              (click)="editCliente(cliente.id!)"
+            >
+              <i class="fa-solid fa-edit"></i>
+            </button>
+            <a
+              routerLink="/cliente/{{ cliente.id }}"
+              class="btn btn-sm btn-secondary"
+              title="Detalhes"
+            >
+              <i class="fa-solid fa-receipt"></i>
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <pagination-controls
+      class="myPagination text-center"
+      previousLabel=""
+      nextLabel=""
+      (pageChange)="p = $event"
+    >
+    </pagination-controls>
+  </div>
 </div>

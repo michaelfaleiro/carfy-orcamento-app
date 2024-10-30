@@ -8,6 +8,9 @@ import { MessageService } from '../../../../../shared/services/message/message.s
 import { CotacaoService } from '../../../../cotacoes/services/cotacao.service';
 import { ModalItemCotacaoComponent } from '../modal-item-cotacao/modal-item-cotacao.component';
 import { ModalCodigoEquivalenteComponent } from '../modal-codigo-equivalente/modal-codigo-equivalente.component';
+import { Item } from '../../../../../interfaces/item/item';
+import { OrcamentoService } from '../../../services/orcamento.service';
+import { AdicionarItemAvulsoOrcamentoRequest } from '../../../../../interfaces/orcamento/adicionarItemAvulsoOrcamentoRequest';
 
 @Component({
   selector: 'app-cotacao-venda-detalhes',
@@ -29,11 +32,13 @@ export class CotacaoVendaDetalhesComponent {
   item: ItemCotacao = {} as ItemCotacao;
   descricaoItem = '';
   itemId = '';
+  orcamentoId = '';
   isModalItem = false;
   isModalCodigoEquivalente = false;
 
   constructor(
     private cotacaoService: CotacaoService,
+    private orcamentoService: OrcamentoService,
     private messageService: MessageService
   ) {}
 
@@ -45,6 +50,7 @@ export class CotacaoVendaDetalhesComponent {
     this.cotacao$ = this.cotacaoService.getCotacaoById(this.cotacaoId);
     this.cotacao$.subscribe({
       next: (cotacao) => {
+        this.orcamentoId = cotacao.orcamentoId;
         this.itens = cotacao.itens;
         this.limparDetalhesItem();
       },
@@ -70,6 +76,27 @@ export class CotacaoVendaDetalhesComponent {
   editarItemCotacao(item: ItemCotacao): void {
     this.item = item;
     this.showModalItem();
+  }
+
+  adicionarItemAvulsoOrcamento(item: PrecoItem) {
+    const itemAvulso: AdicionarItemAvulsoOrcamentoRequest = {
+      quantidade: item.quantidade,
+      sku: item.sku,
+      fabricanteId: item.fabricanteId,
+      descricao: item.descricao,
+      valorVenda: item.valorVenda,
+      orcamentoId: this.orcamentoId,
+      fabricante: item.fabricante, // Assuming fabricante is a property of item
+    };
+    this.orcamentoService.adicionarItemAvulso(itemAvulso).subscribe({
+      next: () => {
+        this.messageService.success('Item adicionado com sucesso!');
+        this.getCotacaoId();
+      },
+      error: (error) => {
+        this.messageService.error(error.error.errors[0]);
+      },
+    });
   }
 
   showDetalhesItem(item: ItemCotacao): void {
